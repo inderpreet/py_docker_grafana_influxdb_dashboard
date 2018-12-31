@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+
+  influxdb:
+    build: influxdb
+    image: influxdb:1.7.2-hackaday
+    container_name: influxdb
+    env_file: config.env
+    ports:
+      - '8086:8086'
+      - '8083:8083'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:5.3.2
+    container_name: grafana
+    env_file: config.env
+    links:
+      - influxdb
+    ports:
+      - '3000:3000'
+    depends_on:
+      - influxdb
+
+volumes:
+  influxdb_data: {}
